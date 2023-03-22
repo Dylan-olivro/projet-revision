@@ -56,5 +56,34 @@ $array = $article->getAllinfo($bdd);
 
     </main>
 </body>
+<style>
+    table {
+        margin: 20px 0;
+    }
+
+    table,
+    td,
+    th {
+        border: 1px solid;
+        border-collapse: collapse;
+    }
+
+    td,
+    th {
+        padding: 5px;
+        text-align: center;
+    }
+
+    th {
+        color: #e74153;
+        border-color: #000;
+    }
+
+    input {
+        color: #f1b16a;
+        padding: 5px;
+        background-color: #121a2e;
+    }
+</style>
 
 </html>

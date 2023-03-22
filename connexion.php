@@ -27,7 +27,7 @@ if (isset($_SESSION['user'])) {
             <input type="text" id="login" name="login" placeholder="Login" autofocus>
             <label for="password">Password</label>
             <input type="password" id="password" name="password" placeholder="Password">
-            <input type="submit" name="submit">
+            <input type="submit" name="submit" class="input">
 
             <?php
 
@@ -53,5 +53,23 @@ if (isset($_SESSION['user'])) {
         </form>
     </main>
 </body>
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .input {
+        color: #f1b16a;
+        padding: 5px;
+        background-color: #121a2e;
+        margin-top: 10px;
+    }
+
+    label {
+        font-size: 1.5rem;
+
+    }
+</style>
 
 </html>

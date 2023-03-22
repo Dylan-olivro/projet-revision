@@ -37,7 +37,7 @@ if (!isset($_SESSION['user'])) {
             <input type="text" id="firstname" name="firstname" value="<?= $_SESSION['user']->firstname ?>">
             <label for="lastname">Lastname</label>
             <input type="text" id="lastname" name="lastname" value="<?= $_SESSION['user']->lastname ?>">
-            <input type="submit" name="submit">
+            <input type="submit" name="submit" class="input">
 
             <?php
             if (isset($_POST['submit'])) {
@@ -48,5 +48,23 @@ if (!isset($_SESSION['user'])) {
         </form>
     </main>
 </body>
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .input {
+        color: #f1b16a;
+        padding: 5px;
+        background-color: #121a2e;
+        margin-top: 10px;
+    }
+
+    label {
+        font-size: 1.5rem;
+
+    }
+</style>
 
 </html>

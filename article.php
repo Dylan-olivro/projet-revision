@@ -27,14 +27,20 @@ if (!isset($_SESSION['user'])) {
     <main>
         <form action="" method="post">
             <label for="article">Article</label>
-            <input type="text" id="article" name="article" autofocus class="input">
+            <input type="text" id="article" name="article" autofocus id="article">
+            <div>
+                <label for="horreur">Horreur</label>
+                <input type="checkbox" value="1" name="cat[]" id="horreur">
 
-            <label for="horreur">Horreur</label>
-            <input type="checkbox" value="1" name="cat[]" id="horreur">
-            <label for="aventure">Aventure</label>
-            <input type="checkbox" value="2" name="cat[]" id="aventure">
-            <label for="action">Action</label>
-            <input type="checkbox" value="3" name="cat[]" id="action">
+            </div>
+            <div>
+                <label for="aventure">Aventure</label>
+                <input type="checkbox" value="2" name="cat[]" id="aventure">
+            </div>
+            <div>
+                <label for="action">Action</label>
+                <input type="checkbox" value="3" name="cat[]" id="action">
+            </div>
 
             <input type="submit" name="submit" class="input">
             <?php
@@ -50,5 +56,30 @@ if (!isset($_SESSION['user'])) {
         </form>
     </main>
 </body>
+<style>
+    form {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        border: 1px solid;
+        margin: 20px 0;
+        padding: 30px;
+    }
+
+    label {
+        font-size: 1.5rem;
+    }
+
+    #article {
+        margin-bottom: 10px;
+    }
+
+    .input {
+        color: #f1b16a;
+        padding: 5px;
+        background-color: #121a2e;
+        margin-top: 10px;
+    }
+</style>
 
 </html>

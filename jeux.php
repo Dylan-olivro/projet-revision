@@ -122,7 +122,7 @@ require_once('bdd.php');
         function endGame()
         {
             if (count($_SESSION['trueCard']) * 2 == count($_SESSION['plateau'])) {
-                echo '<p>FIN DE PARTI</p>';
+                echo '<p class="end">FIN DE PARTIE</p>';
             }
         }
         // ---------------------------------------------------------------------------------
@@ -147,21 +147,51 @@ require_once('bdd.php');
 
     <?php endGame(); ?>
 
-    <form action="">
-        <button type="submit" name="reset" value="reset">reset</button>
+    <form action="" id="form">
+        <button type="submit" name="reset" value="reset" id="reset">RESET</button>
     </form>
 
     <?php
     // var_dump($_SESSION);
 
     ?>
-    <style>
-        div {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-        }
-    </style>
 </body>
+<style>
+    div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        margin: 20px 0;
+    }
+
+    img {
+        object-fit: cover;
+        object-position: top;
+    }
+
+    .end {
+        /* margin-top: 20px; */
+        padding: 10px 20px;
+        color: #121a2e;
+        text-align: center;
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    #form {
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    #reset {
+        color: #f1b16a;
+        padding: 5px;
+        background-color: #121a2e;
+    }
+
+    #reset:active {
+        background-color: #e74153;
+    }
+</style>
 
 </html>

@@ -29,5 +29,12 @@ require_once('bdd.php');
         </section>
     </main>
 </body>
+<style>
+    h1 {
+        font-size: 5rem;
+        text-align: center;
+        color: #121a2e;
+    }
+</style>
 
 </html>

@@ -4,11 +4,6 @@ require_once('./class/User.php');
 require_once('function.php');
 require_once('bdd.php');
 // session_destroy();
-
-$request = $bdd->prepare("SELECT * FROM userscore INNER JOIN utilisateurs ON utilisateurs.id = userscore.id_utilisateur ORDER BY score DESC");
-$request->execute();
-$result = $request->fetchAll(PDO::FETCH_ASSOC);
-// var_dump($result);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,6 +19,14 @@ $result = $request->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <?php require_once('header.php') ?>
     <main>
+        <form action="" method="post">
+            <select name="level" id="">
+                <option value="3">3 paires</option>
+                <option value="6">6 paires</option>
+                <option value=12">12 paires</option>
+            </select>
+            <input type="submit" name="submit">
+        </form>
         <table>
             <thead>
                 <tr>
@@ -35,20 +38,50 @@ $result = $request->fetchAll(PDO::FETCH_ASSOC);
 
             <tbody>
                 <?php
-                foreach ($result as $key) : ?>
-                    <tr>
-                        <td><?= $key['login']  ?></td>
-                        <td><?= $key['level'] ?> paires</td>
-                        <td><?= $key['score'] ?></td>
-                    </tr>
-                <?php endforeach ?>
+                if (!isset($_POST['level'])) {
+                    $_POST['level'] = 3;
+                }
+                $request = $bdd->prepare("SELECT * FROM userscore INNER JOIN utilisateurs ON utilisateurs.id = userscore.id_utilisateur WHERE level = ? ORDER BY score DESC");
+                $request->execute([$_POST['level']]);
+                $result = $request->fetchAll(PDO::FETCH_ASSOC);
+                // var_dump($result);
+                if (isset($_POST['level'])) {
+                    foreach ($result as $key) : ?>
+                        <tr>
+                            <td><?= $key['login']  ?></td>
+                            <td><?= $key['level'] ?> paires</td>
+                            <td><?= $key['score'] ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                <?php
+                }
+                ?>
 
             </tbody>
 
         </table>
+
     </main>
 </body>
 <style>
+    form {
+        margin-top: 20px;
+    }
+
+    input {
+        color: #f1b16a;
+        padding: 5px;
+        background-color: #121a2e;
+
+    }
+
+    select {
+        color: #f1b16a;
+        padding: 5px;
+        background-color: #121a2e;
+
+    }
+
     table {
         margin: 20px 0;
     }

@@ -26,7 +26,7 @@ require_once('bdd.php');
                 <option value="6">6 paires</option>
                 <option value="12">12 paires</option>
             </select>
-            <input type="submit" name="submitLevel" id="" value="Lancer la partie">
+            <input type="submit" name="submitLevel" id="go" value="GO">
         </form>
     </div>
     <div>
@@ -103,7 +103,7 @@ require_once('bdd.php');
             if (isset($_GET['id'])) {
                 if ($_GET['id'] == $randomCard[$i]->id_card) {
                     $_SESSION['nbClick'] += 1;
-                    // var_dump($_SESSION['nbClick']);
+                    var_dump($_SESSION['nbClick']);
                     $randomCard[$i]->state = true;
                     clickCard($randomCard[$i]);
                 }
@@ -227,7 +227,9 @@ require_once('bdd.php');
         text-align: center;
     }
 
-    #reset {
+    #reset,
+    #go,
+    select {
         color: #f1b16a;
         padding: 5px;
         background-color: #121a2e;

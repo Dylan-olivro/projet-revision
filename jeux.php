@@ -103,8 +103,8 @@ require_once('bdd.php');
             if (isset($_GET['id'])) {
                 if ($_GET['id'] == $randomCard[$i]->id_card) {
                     $_SESSION['nbClick'] += 1;
-                    var_dump($_SESSION['nbClick']);
-                    $randomCard[$i]->state = true;
+                    // var_dump($_SESSION['nbClick']);
+                    $randomCard[$i]->setState(true);
                     clickCard($randomCard[$i]);
                 }
             }
@@ -112,7 +112,7 @@ require_once('bdd.php');
         // ---------------------------------------------------------------------------------
         function returnCard($randomCard, $i)
         {
-            if ($randomCard[$i]->state == false) { ?>
+            if ($randomCard[$i]->getState() == false) { ?>
 
                 <form>
                     <button type="submit" value="<?= $randomCard[$i]->getId_card() ?>" name="id">

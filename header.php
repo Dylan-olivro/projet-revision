@@ -10,6 +10,7 @@ require_once('header.php');
         <a href="./index.php">Index</a>
         <a href="./articles.php">Articles</a>
         <a href="./score.php">Score</a>
+        <a href="https://github.com/Dylan-olivro">Github</a>
 
         <?php
 

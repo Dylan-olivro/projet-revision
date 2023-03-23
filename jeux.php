@@ -19,18 +19,42 @@ require_once('bdd.php');
 
 <body>
     <?php require_once('header.php') ?>
+    <div class="reset">
+        <form action="" method="post">
+            <select name="level" id="">
+                <option value="3">3 paires</option>
+                <option value="6">6 paires</option>
+                <option value="12">12 paires</option>
+            </select>
+            <input type="submit" name="submitLevel" id="" value="Lancer la partie">
+        </form>
+    </div>
     <div>
         <?php
         if (empty($_SESSION['trueCard'])) {
             $_SESSION['trueCard'] = [];
         }
+        if (empty($_SESSION['nbClick'])) {
+            $_SESSION['nbClick'] = 0;
+        }
+        // if (empty($_SESSION['plateau'])) {
+        //     $_SESSION['plateau'] = [];
+        // }
+
+        if (isset($_POST['submitLevel'])) {
+            $_SESSION['choiceLevel'] = intval($_POST['level']);
+        }
 
         function resetGame()
         {
-            if (!empty($_GET['reset']) && $_GET['reset'] == 'reset') {
+            // if (!empty($_GET['reset']) && $_GET['reset'] == 'reset') {
+            if (isset($_GET['reset'])) {
                 unset($_SESSION['plateau']);
                 unset($_SESSION['click']);
                 unset($_SESSION['trueCard']);
+                unset($_SESSION['nbClick']);
+                unset($_SESSION['score']);
+                unset($_SESSION['choiceLevel']);
                 // session_destroy();
                 // header('refresh: 0');
                 header('Location:jeux.php');
@@ -78,6 +102,8 @@ require_once('bdd.php');
         {
             if (isset($_GET['id'])) {
                 if ($_GET['id'] == $randomCard[$i]->id_card) {
+                    $_SESSION['nbClick'] += 1;
+                    // var_dump($_SESSION['nbClick']);
                     $randomCard[$i]->state = true;
                     clickCard($randomCard[$i]);
                 }
@@ -119,10 +145,21 @@ require_once('bdd.php');
             }
         }
         // ---------------------------------------------------------------------------------
-        function endGame()
+        function endGame($bdd)
         {
             if (count($_SESSION['trueCard']) * 2 == count($_SESSION['plateau'])) {
-                echo '<p class="end">FIN DE PARTIE</p>';
+                $_SESSION['score'] = (count($_SESSION['plateau']) * 4) - $_SESSION['nbClick'];
+                $request = $bdd->prepare("INSERT INTO userscore (level,score,id_utilisateur) VALUES(?,?,?)");
+                $request->execute([$_SESSION['choiceLevel'], $_SESSION['score'], $_SESSION['user']->id]);
+                // var_dump($_SESSION['nbClick']);
+                if ($_SESSION['score'] == (count($_SESSION['plateau']) * 4) - count($_SESSION['plateau'])) {
+                    echo '<p class="end">FIN DE PARTIE</p>';
+                    echo '<p class="end">Score PARFAIT ' . $_SESSION['score'] . '</p>';
+                    // PROBLEME LE SCORE FAIT 1,2,4,5,7,8...
+                } else {
+                    echo '<p class="end">FIN DE PARTIE</p>';
+                    echo '<p class="end">Votre Score est de ' . $_SESSION['score'] . '</p>';
+                }
             }
         }
         // ---------------------------------------------------------------------------------
@@ -136,16 +173,23 @@ require_once('bdd.php');
                 returnCard($randomCard, $i);
             }
             checkCard();
-            resetGame();
         }
+        resetGame();
         // ---------------------------------------------------------------------------------
 
-        $nbCard = 3;
-        afficherCard($nbCard);
+        // $nbCard = 3;
+        if (isset($_SESSION['choiceLevel'])) {
+            afficherCard($_SESSION['choiceLevel']);
+        }
         ?>
     </div>
 
-    <?php endGame(); ?>
+    <?php
+    if (!empty($_SESSION['plateau'])) {
+        endGame($bdd);
+    }
+    ?>
+
 
     <form action="" id="form">
         <button type="submit" name="reset" value="reset" id="reset">RESET</button>

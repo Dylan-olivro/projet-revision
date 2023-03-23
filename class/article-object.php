@@ -16,23 +16,42 @@ class Articles
 
     public function newArticle($bdd)
     {
-        $newArticle = $bdd->prepare("INSERT INTO articles (article, id_utilisateur) VALUES(?,?)");
-        $newArticle->execute([$this->article, $this->id_utilisateur]);
 
+        $newArticle = $bdd->prepare("INSERT INTO articles (article, id_utilisateur) VALUES(?,?)");
         $articleInfo = $bdd->prepare("SELECT articles.id, articles.article FROM articles INNER JOIN utilisateurs ON articles.id_utilisateur = utilisateurs.id WHERE utilisateurs.id = $this->id_utilisateur ORDER BY articles.id DESC");
         $articleInfo->execute();
         $result = $articleInfo->fetch(PDO::FETCH_ASSOC);
-        var_dump($result);
 
-        $liaison = $bdd->prepare("INSERT INTO liaison (id_article, id_categorie) VALUES(?,?)");
-        for ($i = 0; $i < count($_POST['cat']); $i++) {
+        if (empty($this->article)) {
+            echo 'Champ Article Vide';
+        } elseif (empty($this->id_categorie)) {
+            echo 'Veuillez choisir une ou plusieurs catégories';
+        } else {
+            $newArticle->execute([$this->article, $this->id_utilisateur]);
+            $liaison = $bdd->prepare("INSERT INTO liaison (id_article, id_categorie) VALUES(?,?)");
+            for ($i = 0; $i < count($_POST['cat']); $i++) {
 
-            $liaison->execute([$result['id'], $_POST['cat'][$i]]);
+                $liaison->execute([$result['id'], $_POST['cat'][$i]]);
+            }
         }
 
+        // $newArticle = $bdd->prepare("INSERT INTO articles (article, id_utilisateur) VALUES(?,?)");
+
+        // $articleInfo = $bdd->prepare("SELECT articles.id, articles.article FROM articles INNER JOIN utilisateurs ON articles.id_utilisateur = utilisateurs.id WHERE utilisateurs.id = $this->id_utilisateur ORDER BY articles.id DESC");
+        // $articleInfo->execute();
+        // $result = $articleInfo->fetch(PDO::FETCH_ASSOC);
+        // var_dump($result);
+
+        // $liaison = $bdd->prepare("INSERT INTO liaison (id_article, id_categorie) VALUES(?,?)");
+        // for ($i = 0; $i < count($_POST['cat']); $i++) {
+
+        //     $liaison->execute([$result['id'], $_POST['cat'][$i]]);
+        // }
 
         // header('Location:articles.php');
     }
+
+
     public function getAllinfo($bdd)
     {
         if (isset($_GET['order'])) {

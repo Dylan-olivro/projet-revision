@@ -25,6 +25,7 @@ class Articles
             echo 'Veuillez choisir une ou plusieurs catégories';
         } else {
             $newArticle->execute([$this->article, $this->id_utilisateur]);
+            
             $articleInfo = $bdd->prepare("SELECT articles.id, articles.article FROM articles INNER JOIN utilisateurs ON articles.id_utilisateur = utilisateurs.id WHERE utilisateurs.id = $this->id_utilisateur ORDER BY articles.id DESC");
             $articleInfo->execute();
             $result = $articleInfo->fetch(PDO::FETCH_ASSOC);

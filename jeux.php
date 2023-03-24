@@ -40,7 +40,7 @@ if (!isset($_SESSION['user'])) {
             $_SESSION['trueCard'] = [];
         }
         if (empty($_SESSION['nbClick'])) {
-            $_SESSION['nbClick'] = 0;
+            $_SESSION['nbClick'] = 1;
         }
         // if (empty($_SESSION['plateau'])) {
         //     $_SESSION['plateau'] = [];
@@ -89,6 +89,8 @@ if (!isset($_SESSION['user'])) {
         function clickCard($randomCard)
         {
             if (!empty($_SESSION['click'])) {
+                $_SESSION['nbClick'] += 1;
+                // var_dump($_SESSION['nbClick']);
                 if (count($_SESSION['click']) < 2) {
                     array_push($_SESSION['click'], $randomCard);
                 } else {
@@ -101,14 +103,13 @@ if (!isset($_SESSION['user'])) {
                 $_SESSION['click'] = [];
                 array_push($_SESSION['click'], $randomCard);
             }
+            // header('Location: jeux.php');
         }
         // ---------------------------------------------------------------------------------
         function getClick($randomCard, $i)
         {
             if (isset($_GET['id'])) {
                 if ($_GET['id'] == $randomCard[$i]->id_card) {
-                    $_SESSION['nbClick'] += 1;
-                    // var_dump($_SESSION['nbClick']);
                     $randomCard[$i]->setState(true);
                     clickCard($randomCard[$i]);
                 }

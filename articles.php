@@ -37,14 +37,28 @@ $array = $article->getAllinfo($bdd);
 
             <tbody>
                 <?php
-                foreach ($array[0] as $key) : ?>
+                foreach ($array[0] as $key => $value) {
+
+                    $requestB = $bdd->prepare("SELECT categories.categorieTitle ,articles.id FROM categories INNER JOIN liaison ON categories.id = liaison.id_categorie INNER JOIN articles ON liaison.id_article = articles.id WHERE articles.id = ?;");
+                    $requestB->execute([$array[0][$key]['id']]);
+                    $resultB = $requestB->fetchAll(PDO::FETCH_ASSOC);
+                ?>
+
                     <tr>
-                        <td><?= $key['id_article']  ?></td>
-                        <td><?= $key['login']  ?></td>
-                        <td><?= $key['article'] ?></td>
-                        <td><?= $key['categorieTitle'] ?></td>
+                        <td><?= $value['id']  ?></td>
+                        <td><?= $value['login']  ?></td>
+                        <td><?= $value['article'] ?></td>
+                        <td>
+                            <?php
+                            foreach ($resultB as $k => $val) {
+                                echo $val['categorieTitle'] . ' ';
+                            }
+                            ?>
+                        </td>
                     </tr>
-                <?php endforeach ?>
+                <?php
+                }
+                ?>
 
             </tbody>
 

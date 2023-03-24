@@ -65,7 +65,7 @@ class Articles
             $order = 'DESC';
         }
 
-        $recupArticle = $bdd->prepare("SELECT * FROM articles JOIN utilisateurs ON articles.id_utilisateur = utilisateurs.id JOIN liaison ON articles.id = liaison.id_article JOIN categories ON liaison.id_categorie = categories.id ORDER BY articles.id $order");
+        $recupArticle = $bdd->prepare("SELECT articles.id , article, utilisateurs.login FROM articles INNER JOIN utilisateurs ON articles.id_utilisateur = utilisateurs.id ORDER BY articles.id $order");
         $recupArticle->execute();
         $result = $recupArticle->fetchAll(PDO::FETCH_ASSOC);
 

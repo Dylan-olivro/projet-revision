@@ -46,9 +46,12 @@ if (!isset($_SESSION['user'])) {
             <?php
 
             if (isset($_POST['submit'])) {
-                $article = new Articles($_POST['article'], $_SESSION['user']->id, $_POST['cat']);
-                $article->newArticle($bdd);
-                $article->getAllinfo($bdd);
+                if (isset($_POST['cat'])) {
+
+                    $article = new Articles($_POST['article'], $_SESSION['user']->id, $_POST['cat']);
+                    $article->newArticle($bdd);
+                    $article->getAllinfo($bdd);
+                }
             }
 
             ?>

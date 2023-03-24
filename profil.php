@@ -29,15 +29,14 @@ if (!isset($_SESSION['user'])) {
             <input type="text" id="login" name="login" value="<?= $_SESSION['user']->login ?>" autofocus>
             <label for="email">Email</label>
             <input type="text" id="email" name="email" value="<?= $_SESSION['user']->email ?>">
-            <label for="password">Password</label>
-            <input type="password" name="password">
-            <label for="confirm_password">Confirm password</label>
-            <input type="password" id="confirm_password" name="confirm_password">
             <label for="firstname">Firstname</label>
             <input type="text" id="firstname" name="firstname" value="<?= $_SESSION['user']->firstname ?>">
             <label for="lastname">Lastname</label>
             <input type="text" id="lastname" name="lastname" value="<?= $_SESSION['user']->lastname ?>">
+            <label for="password">Password</label>
+            <input type="password" name="password">
             <input type="submit" name="submit" class="input">
+            <a href="mdp.php">Changer de mot de passe</a>
 
             <?php
             if (isset($_POST['submit'])) {

@@ -4,9 +4,11 @@ require_once('function.php');
 require_once('bdd.php');
 
 // session_destroy();
-if (isset($_SESSION['user'])) {
+if (!isset($_SESSION['user'])) {
     header('Location:index.php');
 }
+
+// var_dump($_SESSION['user']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,27 +23,24 @@ if (isset($_SESSION['user'])) {
 
 <body>
     <?php require_once('header.php'); ?>
+
     <main>
         <form action="" method="post">
-            <label for="login">Login</label>
-            <input type="text" id="login" name="login" placeholder="Login" autofocus>
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Password">
+            <input type="password" name="password">
+            <label for="new_password">New Password</label>
+            <input type="password" name="new_password">
             <input type="submit" name="submit" class="input">
 
             <?php
-
             if (isset($_POST['submit'])) {
-
-                // var_dump($result);
-                $user = new User('', $_POST['login'], $_POST['password'], '', '', '');
-                $user->connect($bdd);
-                $user->isConnected();
+                $user = new User($_SESSION['user']->id, '', password_hash($_POST['new_password'], PASSWORD_DEFAULT), '', '', '');
+                $user->updatePassword($bdd);
             }
-
             ?>
         </form>
     </main>
+
 </body>
 <style>
     form {

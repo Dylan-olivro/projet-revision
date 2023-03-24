@@ -101,64 +101,106 @@ class User
         } elseif ($recupUser->rowCount() > 0) {
             echo 'Login déjà utilisé';
         } else {
-            $insertUser->execute([$this->login, $this->password, $this->email, $this->firstname, $this->lastname]);
+            $insertUser->execute([$this->login, password_hash($this->password, PASSWORD_DEFAULT), $this->email, $this->firstname, $this->lastname]);
             header('Location:connexion.php');
         }
     }
 
 
+    public function connect($bdd)
+    {
+        $request = $bdd->prepare("SELECT * FROM utilisateurs WHERE login = ?");
+        $request->execute([$this->login]);
+        $res = $request->fetchAll(PDO::FETCH_OBJ);
+        // var_dump($res);
+
+        $recupUser = $bdd->prepare("SELECT * FROM utilisateurs WHERE login = ? AND password = ?");
+        $recupUser->execute([$this->login, $res[0]->password]);
+        $result = $recupUser->fetch(PDO::FETCH_OBJ);
+        // $_SESSION['user'] = serialize($this);
+
+        if (login($this->login) == false) {
+        } elseif (password($this->password) == false) {
+        } elseif (special_login($this->login) == false) {
+        } elseif ($recupUser->rowCount() > 0) {
+            if ($result != false) {
+                if (password_verify($this->password, $result->password)) {
+                    $this->id = $result->id;
+                    $this->login = $result->login;
+                    $this->password = $result->password;
+                    $this->email = $result->email;
+                    $this->firstname = $result->firstname;
+                    $this->lastname = $result->lastname;
+
+                    $_SESSION['user'] = $this;
+                    header('Location: index.php');
+                }
+            }
+        } else {
+            echo 'uilisateurs inconnu';
+        }
+    }
+
     public function update($bdd)
     {
+
+        $request = $bdd->prepare("SELECT * FROM utilisateurs WHERE id = ?");
+        $request->execute([$this->id]);
+        $res = $request->fetchAll(PDO::FETCH_OBJ);
+        // var_dump($res[0]->password);
+
         $recupUser = $bdd->prepare("SELECT * FROM utilisateurs WHERE login = ? AND id != ?");
         $recupUser->execute([$this->login, $this->id]);
+        // var_dump($res);
         $insertUser = $bdd->prepare("UPDATE utilisateurs SET login = ?,password = ?,email = ?, firstname = ?,lastname = ? WHERE id = ? ");
 
         if (login($this->login) == false) {
         } elseif (email($this->email) == false) {
         } elseif (password($this->password) == false) {
-        } elseif (confirm_password($_POST['confirm_password']) == false) {
         } elseif (firstname($this->firstname) == false) {
         } elseif (lastname($this->lastname) == false) {
-        } elseif (same_password($this->password, $_POST['confirm_password']) == false) {
         } elseif (special_login($this->login) == false) {
         } elseif ($recupUser->rowCount() > 0) {
             echo 'Login déjà utilisé';
         } else {
-            $insertUser->execute([$this->login, $this->password, $this->email, $this->firstname, $this->lastname, $this->id]);
-            $_SESSION['user']->login = $this->login;
+            if ($this->password != password_verify($this->password, $res[0]->password)) {
+                echo  "Ce n'est pas le bon mot de passe";
+            } else {
+                $insertUser->execute([$this->login, $res[0]->password, $this->email, $this->firstname, $this->lastname, $this->id]);
+                $_SESSION['user']->login = $this->login;
+                $_SESSION['user']->password = $this->password;
+                $_SESSION['user']->email = $this->email;
+                $_SESSION['user']->firstname = $this->firstname;
+                $_SESSION['user']->lastname = $this->lastname;
+                header('Location:profil.php');
+            }
+        }
+    }
+    public function updatePassword($bdd)
+    {
+        $request = $bdd->prepare("SELECT * FROM utilisateurs WHERE id = ?");
+        $request->execute([$this->id]);
+        $res = $request->fetchAll(PDO::FETCH_OBJ);
+        // var_dump($res);
+        $insertUser = $bdd->prepare("UPDATE utilisateurs SET password = ? WHERE id = ? ");
+
+
+        if (password($this->password) == false) {
+        } elseif (empty($_POST['new_password'])) {
+            echo 'Champ New Password vide';
+        } elseif ($_POST['password'] != password_verify($_POST['password'], $res[0]->password)) {
+            echo  "Ce n'est pas le bon mot de passe";
+        } else {
+            $insertUser->execute([$this->password, $this->id]);
             $_SESSION['user']->password = $this->password;
-            $_SESSION['user']->email = $this->email;
-            $_SESSION['user']->firstname = $this->firstname;
-            $_SESSION['user']->lastname = $this->lastname;
             header('Location:profil.php');
         }
     }
-    public function connect($bdd)
-    {
-        $recupUser = $bdd->prepare("SELECT * FROM utilisateurs WHERE login = ? AND password = ?");
-        $recupUser->execute([$this->login, $this->password]);
-        $result = $recupUser->fetch(PDO::FETCH_OBJ);
-        // $_SESSION['user'] = serialize($this);
-        var_dump($result);
-
-        if ($result != false) {
-            $this->id = $result->id;
-
-            $this->login = $result->login;
-            $this->password = $result->password;
-            $this->email = $result->email;
-            $this->firstname = $result->firstname;
-            $this->lastname = $result->lastname;
-
-            $_SESSION['user'] = $this;
-            header('Location: index.php');
-        }
-    }
-
     public function disconnect()
     {
         unset($_SESSION['user']);
     }
+
     public function isConnected()
     {
         if (isset($_SESSION['user']->login)) {

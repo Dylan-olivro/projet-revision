@@ -4,6 +4,11 @@ require_once('./class/User.php');
 require_once('function.php');
 require_once('bdd.php');
 // session_destroy();
+
+if (!isset($_SESSION['user'])) {
+    header('Location:index.php');
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

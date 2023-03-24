@@ -19,7 +19,7 @@ require_once('bdd.php');
 
 <body>
     <?php require_once('header.php');
-    // var_dump($_SESSION['user']);
+    // var_dump($_SESSION);
     // var_dump(unserialize($_SESSION['user']));
     // unset($_SESSION['user']);
     ?>
